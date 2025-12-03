@@ -3,6 +3,26 @@
     <title>pwapp</title>
 </head>
 <body>
-    pwapp :-) <a href='/pwapp/index.py?action=version' target=_new>Check wsgi of the app</a> (function version should return a string)
+    pwapp :-)<br><br>
+    <div id="div_version">Click button to get data from pwapp python wsgi script</div>
+    <br>
+    <button onclick="javascript:update()">Get pwapp version</button><br>
+
+<script>
+
+async function get_data(url) {
+  const response = await fetch(url);
+  return response.text();
+}
+
+function update() {
+    get_data("/pwapp/index.py").then(text => {
+    console.log(text);
+    document.getElementById("div_version").textContent = text; 
+    });
+}
+
+</script>
+
 </body>
 </html>
