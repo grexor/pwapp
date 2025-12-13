@@ -7,6 +7,10 @@
     <div id="div_version">Click button to get data from pwapp python wsgi script</div>
     <br>
     <button onclick="javascript:update()">Get pwapp version</button><br>
+    <br>
+    <div id="div_echo">Click button to send a message that will be echoed</div>
+    <br>
+    <button onclick="javascript:echo()">Received message</button><br>
 
 <script>
 
@@ -19,6 +23,13 @@ function update() {
     get_data("/pwapp/index.py").then(text => {
     console.log(text);
     document.getElementById("div_version").textContent = text; 
+    });
+}
+
+function echo() {
+    get_data("/pwapp/index.py?message=echo_message").then(text => {
+    console.log(text);
+    document.getElementById("div_echo").textContent = text; 
     });
 }
 
