@@ -75,6 +75,10 @@ class TableClass():
     def version(self):
         status_string = f"""pwapp v1 {datetime.datetime.now()}"""
         return [self.return_string(status_string)]
-      
+
+    def echo(self):
+        message = self.pars.get("message", "no_message")
+        return [self.return_string(message)]
+
 def application(environ, start_response):
     return iter(TableClass(environ, start_response))
