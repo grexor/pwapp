@@ -3,14 +3,14 @@
     <title>pwapp</title>
 </head>
 <body>
-    pwapp :-)<br><br>
-    <div id="div_version">Click button to get data from pwapp python wsgi script</div>
-    <br>
+    pwapp :-)<br><br><br><br>
     <button onclick="javascript:update()">Get pwapp version</button><br>
     <br>
-    <div id="div_echo">Click button to send a message that will be echoed</div>
+    <div id="div_version">Click button to get data from pwapp python wsgi script</div>
+    <br><br><br>
+    <button onclick="javascript:echo()">Send echo message</button><br>
     <br>
-    <button onclick="javascript:echo()">Received message</button><br>
+    <div id="div_echo">Click button to send a message that will be echoed</div>
 
 <script>
 
@@ -20,16 +20,16 @@ async function get_data(url) {
 }
 
 function update() {
-    get_data("/pwapp/index.py").then(text => {
+    get_data("/pwapp/index.py?action=version").then(text => {
     console.log(text);
     document.getElementById("div_version").textContent = text; 
     });
 }
 
 function echo() {
-    get_data("/pwapp/index.py?message=echo_message").then(text => {
+    get_data("/pwapp/index.py?action=echo&message=echo_message").then(text => {
     console.log(text);
-    document.getElementById("div_echo").textContent = text; 
+    document.getElementById("div_echo").textContent = text;
     });
 }
 
