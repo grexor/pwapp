@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM ubuntu:25.10
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
@@ -26,7 +26,7 @@ CMD bash -c '\
         python3 -m venv /var/www/site/dbase/venv; \
     fi; \
     # Upgrade pip \
-    /var/www/site/dbase/venv/bin/pip install --upgrade pip; \
+    # /var/www/site/dbase/venv/bin/pip install --upgrade pip; \
     # Install requirements if exists \
     if [ -f /var/www/site/dbase/requirements.txt ]; then \
         /var/www/site/dbase/venv/bin/pip install -r /var/www/site/dbase/requirements.txt; \

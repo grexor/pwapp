@@ -1,3 +1,4 @@
+rm -rf venv
 #!/usr/bin/env bash
 set -e
 IMAGE_NAME="pwapp"
