@@ -1,5 +1,4 @@
 import json
-import cgi
 import urllib
 import os
 import sys
@@ -19,6 +18,7 @@ from itertools import combinations
 import re
 import html
 import subprocess
+import urllib.parse
 urllib3.disable_warnings()
 
 def sanitize_value(value: str) -> str:
@@ -60,16 +60,34 @@ class TableClass():
             yield from self.error("method not found")
 
     def parse_fields(self, environ):
-        request_method = environ["REQUEST_METHOD"]
-        if environ["REQUEST_METHOD"]=="GET":
-            pars = urllib.parse.parse_qs(environ['QUERY_STRING'])
-            for par, [val] in pars.items():
-                pars[par] = val
-        if environ["REQUEST_METHOD"]=="POST":
-            self.formdata = cgi.FieldStorage(environ=environ, fp=environ['wsgi.input'])
-            pars = {}
-            for key in self.formdata.keys():
-                  pars[key] = self.formdata[key].value
+        method = environ.get("REQUEST_METHOD", "").upper()
+        pars = {}
+
+        if method == "GET":
+            qs = environ.get("QUERY_STRING", "")
+            parsed = urllib.parse.parse_qs(qs, keep_blank_values=True)
+            # flatten values (same behavior as your code)
+            pars = {k: v[0] for k, v in parsed.items()}
+
+        elif method == "POST":
+            content_type = environ.get("CONTENT_TYPE", "")
+            content_length = int(environ.get("CONTENT_LENGTH", 0))
+
+            body = environ["wsgi.input"].read(content_length)
+
+            if content_type.startswith("application/x-www-form-urlencoded"):
+                parsed = urllib.parse.parse_qs(
+                    body.decode("utf-8"),
+                    keep_blank_values=True
+                )
+                pars = {k: v[0] for k, v in parsed.items()}
+
+            elif content_type.startswith("application/json"):
+                pars = json.loads(body.decode("utf-8"))
+
+            else:
+                raise ValueError(f"Unsupported Content-Type: {content_type}")
+
         return pars
 
     def version(self):
